@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -6,47 +9,58 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
-interface BookingForm {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  service: string;
-  message: string;
-}
+// Validation schema for the booking form
+const bookingFormSchema = z.object({
+  firstName: z.string().min(2, "First name must be at least 2 characters").max(50, "First name must be less than 50 characters"),
+  lastName: z.string().min(2, "Last name must be at least 2 characters").max(50, "Last name must be less than 50 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  phone: z.string().min(10, "Phone number must be at least 10 digits").max(15, "Phone number must be less than 15 digits"),
+  service: z.string().min(1, "Please select a service"),
+  message: z.string().max(500, "Message must be less than 500 characters").optional(),
+});
+
+type BookingFormData = z.infer<typeof bookingFormSchema>;
 
 export default function ContactSection() {
   const { toast } = useToast();
-  const [formData, setFormData] = useState<BookingForm>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    service: "",
-    message: "",
+
+  const form = useForm<BookingFormData>({
+    resolver: zodResolver(bookingFormSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      service: "",
+      message: "",
+    },
   });
 
   const bookingMutation = useMutation({
-    mutationFn: async (data: BookingForm) => {
-      const response = await apiRequest("POST", "/api/bookings", data);
-      return response.json();
+    mutationFn: async (data: BookingFormData) => {
+      console.log(" data data data", data);
+      const response = await axios.post("https://my-atomik-server.vercel.app/api/v1/settings/message", {
+        ...data,
+        sheet: "White Orchid Spa"
+      });
+      return response.data;
     },
     onSuccess: () => {
       toast({
         title: "Booking Submitted",
         description: "We'll contact you soon to confirm your appointment.",
       });
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        service: "",
-        message: "",
-      });
+      form.reset();
     },
     onError: () => {
       toast({
@@ -57,23 +71,8 @@ export default function ContactSection() {
     },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone || !formData.service) {
-      toast({
-        title: "Required Fields",
-        description: "Please fill in all required fields.",
-        variant: "destructive",
-      });
-      return;
-    }
-    bookingMutation.mutate(formData);
-  };
-
-  const handleInputChange = (field: keyof BookingForm) => (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFormData({ ...formData, [field]: e.target.value });
+  const onSubmit = (data: BookingFormData) => {
+    bookingMutation.mutate(data);
   };
 
   return (
@@ -94,104 +93,152 @@ export default function ContactSection() {
             <h3 className="font-serif text-2xl font-semibold text-spa-primary mb-6">
               Book Your Appointment
             </h3>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="firstName" className="block text-spa-text font-medium mb-2">
-                    First Name *
-                  </Label>
-                  <Input
-                    id="firstName"
-                    type="text"
-                    value={formData.firstName}
-                    onChange={handleInputChange("firstName")}
-                    placeholder="Your first name"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-spa-primary focus:border-transparent"
-                    required
+
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="firstName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="block text-spa-text font-medium mb-2">
+                          First Name *
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Your first name"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-spa-primary focus:border-transparent"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="lastName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="block text-spa-text font-medium mb-2">
+                          Last Name *
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Your last name"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-spa-primary focus:border-transparent"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
                 </div>
-                <div>
-                  <Label htmlFor="lastName" className="block text-spa-text font-medium mb-2">
-                    Last Name *
-                  </Label>
-                  <Input
-                    id="lastName"
-                    type="text"
-                    value={formData.lastName}
-                    onChange={handleInputChange("lastName")}
-                    placeholder="Your last name"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-spa-primary focus:border-transparent"
-                    required
-                  />
-                </div>
-              </div>
-              <div>
-                <Label htmlFor="email" className="block text-spa-text font-medium mb-2">
-                  Email *
-                </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleInputChange("email")}
-                  placeholder="your.email@example.com"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-spa-primary focus:border-transparent"
-                  required
+
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="block text-spa-text font-medium mb-2">
+                        Email *
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          placeholder="your.email@example.com"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-spa-primary focus:border-transparent"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </div>
-              <div>
-                <Label htmlFor="phone" className="block text-spa-text font-medium mb-2">
-                  Phone *
-                </Label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  value={formData.phone}
-                  onChange={handleInputChange("phone")}
-                  placeholder="+256 XXX XXX XXX"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-spa-primary focus:border-transparent"
-                  required
+
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="block text-spa-text font-medium mb-2">
+                        Phone *
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="tel"
+                          placeholder="+256 XXX XXX XXX"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-spa-primary focus:border-transparent"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </div>
-              <div>
-                <Label htmlFor="service" className="block text-spa-text font-medium mb-2">
-                  Preferred Service *
-                </Label>
-                <Select value={formData.service} onValueChange={(value) => setFormData({ ...formData, service: value })}>
-                  <SelectTrigger className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-spa-primary focus:border-transparent">
-                    <SelectValue placeholder="Select a service" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="therapeutic-massage">Therapeutic Massage</SelectItem>
-                    <SelectItem value="rejuvenating-facials">Rejuvenating Facials</SelectItem>
-                    <SelectItem value="aromatherapy">Aromatherapy</SelectItem>
-                    <SelectItem value="body-treatments">Body Treatments</SelectItem>
-                    <SelectItem value="couples-treatments">Couples Treatments</SelectItem>
-                    <SelectItem value="wellness-programs">Wellness Programs</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label htmlFor="message" className="block text-spa-text font-medium mb-2">
-                  Message
-                </Label>
-                <Textarea
-                  id="message"
-                  value={formData.message}
-                  onChange={handleInputChange("message")}
-                  rows={4}
-                  placeholder="Any special requests or questions..."
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-spa-primary focus:border-transparent"
+
+                <FormField
+                  control={form.control}
+                  name="service"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="block text-spa-text font-medium mb-2">
+                        Preferred Service *
+                      </FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-spa-primary focus:border-transparent">
+                            <SelectValue placeholder="Select a service" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="therapeutic-massage">Therapeutic Massage</SelectItem>
+                          <SelectItem value="rejuvenating-facials">Rejuvenating Facials</SelectItem>
+                          <SelectItem value="aromatherapy">Aromatherapy</SelectItem>
+                          <SelectItem value="body-treatments">Body Treatments</SelectItem>
+                          <SelectItem value="couples-treatments">Couples Treatments</SelectItem>
+                          <SelectItem value="wellness-programs">Wellness Programs</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </div>
-              <Button
-                type="submit"
-                disabled={bookingMutation.isPending}
-                className="w-full bg-spa-primary text-white py-4 rounded-lg hover:bg-opacity-90 transition-all duration-300 font-semibold"
-              >
-                {bookingMutation.isPending ? "Submitting..." : "Book Appointment"}
-              </Button>
-            </form>
+
+                <FormField
+                  control={form.control}
+                  name="message"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="block text-spa-text font-medium mb-2">
+                        Message
+                      </FormLabel>
+                      <FormControl>
+                        <Textarea
+                          rows={4}
+                          placeholder="Any special requests or questions..."
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-spa-primary focus:border-transparent"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <Button
+                  type="submit"
+                  // disabled={bookingMutation.isPending}
+                  disabled
+                  className="w-full bg-spa-primary text-white py-4 rounded-lg hover:bg-opacity-90 transition-all duration-300 font-semibold"
+                >
+                  {bookingMutation.isPending ? "Submitting..." : "Book Appointment"}
+                </Button>
+              </form>
+            </Form>
           </div>
 
           {/* Contact Information */}

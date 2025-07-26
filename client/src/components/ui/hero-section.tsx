@@ -53,7 +53,7 @@ export default function HeroSection() {
           <Button
             onClick={scrollToContact}
             variant="outline"
-            className="border-2 border-white text-white px-8 py-4 rounded-full hover:bg-white hover:text-spa-primary transition-all duration-300 font-semibold"
+            className="border-2 border-white text-white px-8 py-4 rounded-full hover:bg-white hover:text-spa-primary bg-white text-spa-primary transition-all duration-300 font-semibold"
           >
             Book Appointment
           </Button>

@@ -1,7 +1,7 @@
 import { Leaf } from "lucide-react";
 
 const stats = [
-  { number: "5+", label: "Years Experience" },
+  { number: "10+", label: "Years Experience" },
   { number: "1000+", label: "Happy Clients" },
   { number: "15+", label: "Services" },
 ];
@@ -23,7 +23,7 @@ const team = [
     name: "Emma Thompson",
     role: "Senior Aesthetician",
     specialization: "Specializing in Facials & Skincare Treatments",
-    image: "https://images.unsplash.com/photo-1594824947088-06e30eca7c8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400",
+    image: "https://plus.unsplash.com/premium_photo-1661680271644-00e5bdf97627?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400",
   },
 ];
 

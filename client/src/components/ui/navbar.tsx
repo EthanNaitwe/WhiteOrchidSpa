@@ -23,9 +23,30 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
-            <h1 className="font-serif text-2xl font-semibold text-spa-primary">
-              White Orchid
-            </h1>
+            <div
+              className="relative flex items-center justify-center"
+              style={{
+                width: '260px',
+                height: '56px',
+                backgroundImage: `url('https://images.unsplash.com/photo-1565825051903-b22d86e652a2?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                borderRadius: '0.5rem',
+                overflow: 'hidden',
+              }}
+            >
+              <div
+                className="absolute inset-0 bg-white/70 dark:bg-black/60"
+                style={{ zIndex: 1 }}
+              />
+              <h1
+                className="font-serif text-2xl font-semibold text-spa-primary relative z-10 text-center w-full"
+                style={{ lineHeight: '56px' }}
+              >
+                White Orchid Spa
+              </h1>
+            </div>
           </div>
           
           <div className="hidden md:block">

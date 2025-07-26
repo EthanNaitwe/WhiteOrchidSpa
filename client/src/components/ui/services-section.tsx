@@ -29,7 +29,7 @@ const services = [
     title: "Couples Treatments",
     description: "Romantic spa experiences designed for two in our private couples suite.",
     price: "From $240",
-    image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500",
+    image: "https://images.unsplash.com/photo-1498966518889-2cbecc307aed?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500",
   },
   {
     title: "Wellness Programs",
@@ -83,7 +83,7 @@ export default function ServicesSection() {
                   {service.description}
                 </p>
                 <div className="text-spa-gold font-semibold text-lg">
-                  {service.price}
+                  {/* {service.price} */}
                 </div>
               </div>
             </div>
