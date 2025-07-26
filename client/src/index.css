@@ -1,0 +1,156 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Open+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --background: hsl(0, 0%, 98%);
+  --foreground: hsl(0, 0%, 18%);
+  --muted: hsl(120, 100%, 97%);
+  --muted-foreground: hsl(0, 0%, 45%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(0, 0%, 18%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(0, 0%, 18%);
+  --border: hsl(120, 13%, 90%);
+  --input: hsl(120, 13%, 90%);
+  --primary: hsl(146, 51%, 36%);
+  --primary-foreground: hsl(0, 0%, 98%);
+  --secondary: hsl(120, 100%, 97%);
+  --secondary-foreground: hsl(0, 0%, 18%);
+  --accent: hsl(176, 65%, 45%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(60, 9%, 98%);
+  --ring: hsl(146, 51%, 36%);
+  --radius: 0.5rem;
+  --spa-gold: hsl(43, 74%, 49%);
+  --spa-text: hsl(180, 25%, 25%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 4%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 4%, 16%);
+  --muted-foreground: hsl(240, 5%, 65%);
+  --popover: hsl(240, 10%, 4%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 4%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 4%, 16%);
+  --input: hsl(240, 4%, 16%);
+  --primary: hsl(146, 51%, 36%);
+  --primary-foreground: hsl(0, 0%, 98%);
+  --secondary: hsl(240, 4%, 16%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(176, 65%, 45%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 63%, 31%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 5%, 84%);
+  --spa-gold: hsl(43, 74%, 49%);
+  --spa-text: hsl(180, 25%, 75%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+.font-serif {
+  font-family: 'Playfair Display', serif;
+}
+
+.font-sans {
+  font-family: 'Open Sans', sans-serif;
+}
+
+.spa-primary {
+  color: hsl(146, 51%, 36%);
+}
+
+.spa-secondary {
+  color: hsl(120, 100%, 97%);
+}
+
+.spa-accent {
+  color: hsl(176, 65%, 45%);
+}
+
+.spa-gold {
+  color: hsl(43, 74%, 49%);
+}
+
+.spa-text {
+  color: hsl(180, 25%, 25%);
+}
+
+.bg-spa-primary {
+  background-color: hsl(146, 51%, 36%);
+}
+
+.bg-spa-secondary {
+  background-color: hsl(120, 100%, 97%);
+}
+
+.bg-spa-accent {
+  background-color: hsl(176, 65%, 45%);
+}
+
+.bg-spa-gold {
+  background-color: hsl(43, 74%, 49%);
+}
+
+.bg-spa-text {
+  background-color: hsl(180, 25%, 25%);
+}
+
+.text-spa-primary {
+  color: hsl(146, 51%, 36%);
+}
+
+.text-spa-secondary {
+  color: hsl(120, 100%, 97%);
+}
+
+.text-spa-accent {
+  color: hsl(176, 65%, 45%);
+}
+
+.text-spa-gold {
+  color: hsl(43, 74%, 49%);
+}
+
+.text-spa-text {
+  color: hsl(180, 25%, 25%);
+}
+
+.border-spa-primary {
+  border-color: hsl(146, 51%, 36%);
+}
+
+.hover\:bg-spa-primary:hover {
+  background-color: hsl(146, 51%, 36%);
+}
+
+.hover\:text-spa-primary:hover {
+  color: hsl(146, 51%, 36%);
+}
+
+.focus\:ring-spa-primary:focus {
+  --tw-ring-color: hsl(146, 51%, 36%);
+}
+
+.focus\:border-spa-primary:focus {
+  border-color: hsl(146, 51%, 36%);
+}
